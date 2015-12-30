@@ -18,12 +18,12 @@
 void Welcome();
 string readignoringcomments(ifstream &file);
 void randomlyplace(Grid<int> &grd, int width, int height);
-void populatefromfile(ifstream &file,Grid<int> &grd, int width, int height);
+void populatefromfile(ifstream &file,Grid<int> &grd,int width,int height);
 string readlinefromfile(ifstream &file);
-void graphicaldisplay(Grid<int> &grd, int width, int height);
-void populatefromfile(ifstream &file,Grid<int> &grd, int width, int height);
-int countneighbours(Grid<int> &grd,int x,int y,int width,int height);
-void processgeneration(Grid<int> &grd,int width,int height);
+void populatefromfile(ifstream &file,Grid<int> &grd,int width,int height);
+void applyrules(Grid<int> &grd,int width,int height);
+void graphicaldisplay(Grid<int> &grd,int width,int height);
+
 
 int main()
 {
@@ -77,6 +77,83 @@ int main()
 	graphicaldisplay(grd,width,height);
 	return 0;
 }
+void applyrules(Grid<int> &grd,int width,int height)
+{
+	 Grid<int> nextGen(width,height);
+		for(int i=0;i<width;i++)
+		{
+			for(int j=0;j<height;j++)
+			{
+				int count=0;
+				for(int z=0;z<width;z++)
+				{
+					for(int y=0;y<height;y++)
+					{
+						for(int j=z-1;j<=z+1;j++)
+						{
+							if(j==-1) continue;
+							if(j==width)continue;
+							for(int u=y-1;u<=y+1;u++)
+							{
+								if(u==-1)continue;
+								if(u==height)continue;
+								if(grd[j][u]!=0)
+								count++;
+							}
+						}
+							cout<<count<<"\t";
+							count=0;
+					  }
+					cout<<"\n";
+				 }
+				if (count==0||count ==1||count > 3)
+				{
+					nextGen[i][j]=0;
+				}
+				else if(count==2)
+				{
+					if(grd[i][j]>0)
+						nextGen[i][j]=grd[i][j] + 1;
+					else
+						nextGen[i][j]=0;
+				}
+				else if(count==3)
+				{
+					nextGen[i][j]=grd[i][j]+1;
+				}
+			}
+		}
+    
+}
+int countNeighbours(Grid<int> &grd,int width,int height)
+{
+    
+    int count=0;
+    for(int z=0;z<width;z++)
+    {
+        for(int y=0;y<height;y++)
+        {
+            for(int j=z-1;j<=z+1;j++)
+            {
+                if(j==-1) continue;
+                if(j==width)continue;
+                    
+                for(int u=y-1;u<=y+1;u++)
+                {
+                    if(u==-1)continue;
+                    if(u==height)continue;
+                    if(grd[j][u]!=0)
+                    count++;
+                }
+            }
+            cout<<count<<"\t";
+            count=0;
+        }
+        cout<<"\n";
+    }
+   return 0;
+}
+
 void graphicaldisplay(Grid<int> &grd, int width, int height)
 {
 	InitLifeGraphics(width,height);
@@ -121,6 +198,7 @@ void populatefromfile(ifstream &file,Grid<int> &grd, int width, int height)
 		}	
 	}
 }
+
 string readlinefromfile(ifstream &file)
 {
 	string returnstr;
