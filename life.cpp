@@ -22,7 +22,8 @@ void populatefromfile(ifstream &file,Grid<int> &grd,int width,int height);
 string readlinefromfile(ifstream &file);
 void populatefromfile(ifstream &file,Grid<int> &grd,int width,int height);
 void applyrules(Grid<int> &grd,int width,int height);
-void graphicaldisplay(Grid<int> &grd,int width,int height);
+int countNeighbours(Grid<int> &grd,int x,int y,int width,int height);
+void graphicaldisplay(Grid<int> &grd, int width, int height);
 
 
 int main()
@@ -79,33 +80,13 @@ int main()
 }
 void applyrules(Grid<int> &grd,int width,int height)
 {
-	 Grid<int> nextGen(width,height);
-		for(int i=0;i<width;i++)
+	Grid<int> nextGen(width,height);
+	int count;
+	for (int i=0;i<width;i++)
+	{
+		for (int j=0;j<height;j++)
 		{
-			for(int j=0;j<height;j++)
-			{
-				int count=0;
-				for(int z=0;z<width;z++)
-				{
-					for(int y=0;y<height;y++)
-					{
-						for(int j=z-1;j<=z+1;j++)
-						{
-							if(j==-1) continue;
-							if(j==width)continue;
-							for(int u=y-1;u<=y+1;u++)
-							{
-								if(u==-1)continue;
-								if(u==height)continue;
-								if(grd[j][u]!=0)
-								count++;
-							}
-						}
-							cout<<count<<"\t";
-							count=0;
-					  }
-					cout<<"\n";
-				 }
+				count= countNeighbours(grd,i,j,width,height);
 				if (count==0||count ==1||count > 3)
 				{
 					nextGen[i][j]=0;
@@ -120,38 +101,30 @@ void applyrules(Grid<int> &grd,int width,int height)
 				else if(count==3)
 				{
 					nextGen[i][j]=grd[i][j]+1;
-				}
-			}
-		}
-    
+				} 
+		}             
+	}
+	grd = nextGen;
 }
-int countNeighbours(Grid<int> &grd,int width,int height)
+
+
+int countNeighbours(Grid<int> &grd,int x,int y,int width,int height)
 {
-    
     int count=0;
-    for(int z=0;z<width;z++)
+    for(int j=x-1;j<=x+1;j++)
     {
-        for(int y=0;y<height;y++)
+		if(j==-1) continue;
+        if(j==width)continue;    
+        for(int u=y-1;u<=y+1;u++)
         {
-            for(int j=z-1;j<=z+1;j++)
-            {
-                if(j==-1) continue;
-                if(j==width)continue;
-                    
-                for(int u=y-1;u<=y+1;u++)
-                {
-                    if(u==-1)continue;
-                    if(u==height)continue;
-                    if(grd[j][u]!=0)
+			if(u==-1)continue;
+            if(u==height)continue;
+            if(grd[j][u]!=0)
                     count++;
-                }
-            }
-            cout<<count<<"\t";
-            count=0;
-        }
-        cout<<"\n";
-    }
-   return 0;
+         }
+     }
+     
+   return count;
 }
 
 void graphicaldisplay(Grid<int> &grd, int width, int height)
@@ -163,6 +136,7 @@ void graphicaldisplay(Grid<int> &grd, int width, int height)
 		for (int x =0;x<width;x++)
 			for (int y =0;y < height;y++)
 				DrawCellAt(x,y,grd[x][y]);
+		applyrules(grd,width,height);
 	}	
 }
 
