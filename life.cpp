@@ -87,7 +87,15 @@ void applyrules(Grid<int> &grd,int width,int height)
 		for (int j=0;j<height;j++)
 		{
 				count= countNeighbours(grd,i,j,width,height);
-				if (count==0||count ==1||count > 3)
+				if(count==0)
+				{
+					nextGen[i][j]=0;
+				}
+				if(count ==1)
+				{
+					nextGen[i][j]=0;
+				}
+				if(count > 3)
 				{
 					nextGen[i][j]=0;
 				}
